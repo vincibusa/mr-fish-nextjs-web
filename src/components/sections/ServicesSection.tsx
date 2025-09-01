@@ -6,10 +6,60 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { Truck, MessageCircle, CreditCard, Store } from "lucide-react";
+import clsx from "clsx";
 
 interface ServicesSectionProps {
   onWhatsAppClick: () => void;
 }
+
+const services = [
+  {
+    icon: Truck,
+    title: "Fornitura Ingrosso",
+    description: "Quantità, qualità e puntualità sempre al tuo servizio.",
+    features: [
+      "Consegne programmate",
+      "Prezzi all'ingrosso",
+      "Assistenza dedicata"
+    ],
+    image: "https://images.unsplash.com/photo-1607083206968-13611e3d76db?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    icon: MessageCircle,
+    title: "Ordini WhatsApp",
+    description: "Zero stress, scrivi e ricevi ciò che ti serve, quando ti serve.",
+    features: [
+      "Ordini rapidi e semplici",
+      "Conferma immediata",
+      "Supporto diretto e real-time"
+    ],
+    ctaText: "Ordina Ora",
+    highlighted: true,
+    image: "https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    icon: CreditCard,
+    title: "Fidelity Card",
+    description: "Vantaggi esclusivi per chi ci sceglie ogni giorno.",
+    features: [
+      "Sconti riservati",
+      "Raccolta punti fedeltà",
+      "Offerte speciali dedicate"
+    ],
+    image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    icon: Store,
+    title: "Consegna a Domicilio",
+    description: "La comodità fino a casa tua, entro 5 km dal nostro negozio.",
+    features: [
+      "Copertura entro 5 km",
+      "Consegna veloce e sicura",
+      "Prodotti sempre freschi"
+    ],
+    image: "https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+  }
+];
 
 export default function ServicesSection({ onWhatsAppClick }: ServicesSectionProps) {
   const ref = useRef(null);
@@ -20,21 +70,19 @@ export default function ServicesSection({ onWhatsAppClick }: ServicesSectionProp
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3
+        staggerChildren: 0.15,
       }
     }
   };
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 30, scale: 0.9 },
+    hidden: { opacity: 0, y: 30, scale: 0.95 },
     visible: {
       opacity: 1,
       y: 0,
       scale: 1,
       transition: {
-        duration: 0.6,
-        ease: "easeOut" as any
+        duration: 0.5,
       }
     }
   };
@@ -46,13 +94,12 @@ export default function ServicesSection({ onWhatsAppClick }: ServicesSectionProp
       y: 0,
       transition: {
         duration: 0.8,
-        ease: "easeOut" as any
       }
     }
   };
 
   return (
-    <section id="servizi" className="py-20 bg-gray-50/50" ref={ref}>
+    <section id="servizi" className="py-24 bg-muted/20" ref={ref}>
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -61,79 +108,39 @@ export default function ServicesSection({ onWhatsAppClick }: ServicesSectionProp
           animate={isInView ? "visible" : "hidden"}
           className="text-center mb-16"
         >
-          <Badge className="mb-6 bg-secondary/10 text-secondary border-secondary/20 hover:bg-secondary/20 transition-colors text-sm px-4 py-2">
+          <Badge className="mb-6 bg-secondary/10 text-secondary border-secondary/20 hover:bg-secondary/20 transition-colors text-sm px-4 py-2 rounded-full">
             I Nostri Servizi
           </Badge>
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
-            Servizi <span className="text-brand-primary">Dedicati</span>
+            Un Servizio <span className="text-primary">pensato per Te</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Che tu stia pensando a una cena veloce a casa o al menù completo del tuo locale, 
-            Mister Fish ha sempre la soluzione perfetta.
+          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            Dalla fornitura per ristoranti alla spesa di tutti i giorni, abbiamo la soluzione giusta per ogni tua esigenza. Velocità, qualità e convenienza sono il nostro mestiere.
           </p>
         </motion.div>
 
-        {/* Services Grid */}
+        {/* Services Bento Grid */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          <motion.div variants={cardVariants}>
-            <ServiceCard
-              icon={Truck}
-              title="Fornitura Ingrosso"
-              description="Quantità, qualità e puntualità sempre al tuo servizio."
-              features={[
-                "Consegne programmate",
-                "Prezzi all'ingrosso",
-                "Assistenza dedicata"
-              ]}
-            />
-          </motion.div>
-
-          <motion.div variants={cardVariants}>
-            <ServiceCard
-              icon={MessageCircle}
-              title="Ordini WhatsApp"
-              description="Zero stress, scrivi e ricevi ciò che ti serve."
-              features={[
-                "Ordini rapidi",
-                "Conferma immediata",
-                "Supporto real-time"
-              ]}
-              ctaText="Ordina Ora"
-              onCtaClick={onWhatsAppClick}
-              highlighted
-            />
-          </motion.div>
-
-          <motion.div variants={cardVariants}>
-            <ServiceCard
-              icon={CreditCard}
-              title="Fidelity Card"
-              description="Vantaggi esclusivi per chi ci sceglie ogni giorno."
-              features={[
-                "Sconti riservati",
-                "Punti fedeltà",
-                "Offerte speciali"
-              ]}
-            />
-          </motion.div>
-
-          <motion.div variants={cardVariants}>
-            <ServiceCard
-              icon={Store}
-              title="Consegna a Domicilio"
-              description="Comodità fino a casa tua, entro 5 km dal negozio."
-              features={[
-                "Raggio 5 km",
-                "Consegna veloce",
-                "Prodotti sempre freschi"
-              ]}
-            />
-          </motion.div>
+          {services.map((service, index) => (
+            <motion.div
+              key={index}
+              variants={cardVariants}
+              className={clsx({
+                "lg:col-span-2": service.highlighted, // Highlighted card takes more space
+                "md:col-span-1": !service.highlighted
+              })}
+            >
+              <ServiceCard
+                {...service}
+                onCtaClick={service.highlighted ? onWhatsAppClick : undefined}
+              />
+            </motion.div>
+          ))}
         </motion.div>
       </div>
     </section>

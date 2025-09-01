@@ -1,6 +1,8 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LucideIcon } from "lucide-react";
+import { motion } from "framer-motion";
+import clsx from "clsx";
+import Image from "next/image";
 
 interface ServiceCardProps {
   icon: LucideIcon;
@@ -10,6 +12,7 @@ interface ServiceCardProps {
   ctaText?: string;
   onCtaClick?: () => void;
   highlighted?: boolean;
+  image?: string;
 }
 
 export default function ServiceCard({
@@ -19,61 +22,87 @@ export default function ServiceCard({
   features,
   ctaText,
   onCtaClick,
-  highlighted = false
+  highlighted = false,
+  image
 }: ServiceCardProps) {
+  const cardClasses = clsx(
+    "relative w-full h-full bg-gradient-to-br from-white/5 via-white/10 to-white/5 backdrop-blur-xl rounded-3xl overflow-hidden shadow-2xl flex flex-col border border-white/10 hover:border-white/20 transition-all duration-300 group border-none",
+    {
+      "ring-2 ring-primary/30 shadow-primary/20": highlighted,
+      "hover:shadow-xl hover:scale-[1.02]": !highlighted
+    }
+  );
+
+  const iconContainerClasses = clsx(
+    "p-4 rounded-2xl mb-6 inline-flex items-center justify-center transition-all duration-300",
+    {
+      'bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-lg shadow-primary/30': highlighted,
+      'bg-gradient-to-br from-primary/10 to-primary/5 text-primary shadow-md shadow-primary/10 hover:shadow-lg hover:shadow-primary/20': !highlighted
+    }
+  );
+
   return (
-    <Card className={`h-full transition-all duration-300 hover:shadow-xl ${
-      highlighted 
-        ? 'border-primary bg-gradient-to-br from-primary/5 to-secondary/5' 
-        : 'hover:border-primary/50'
-    }`}>
-      <CardContent className="p-6 h-full flex flex-col">
-        {/* Header con icona */}
-        <div className="flex items-center space-x-3 mb-4">
-          <div className={`p-3 rounded-xl ${
-            highlighted 
-              ? 'bg-primary text-primary-foreground' 
-              : 'bg-muted text-primary'
-          }`}>
-            <Icon className="w-6 h-6" />
+    <motion.div
+      whileHover={{ y: -5, scale: 1.02 }}
+      className="h-full"
+    >
+      <div className={cardClasses}>
+        {/* Background Image */}
+        {image && (
+          <div className="absolute inset-0 overflow-hidden">
+            <Image
+              src={image}
+              alt={title}
+              fill
+              className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-20"
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-secondary/20" />
           </div>
-          <h3 className="font-bold text-xl text-foreground">{title}</h3>
-        </div>
+        )}
+        
+        {/* Decorative gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-50" />
+        
+        <div className="relative p-8 flex flex-col flex-grow z-10">
+          <div className={iconContainerClasses}>
+            <Icon className="w-8 h-8" />
+          </div>
+          
+          <h3 className="font-bold text-2xl text-foreground mb-4">{title}</h3>
+          
+          <p className="text-muted-foreground text-base mb-8 flex-grow leading-relaxed">
+            {description}
+          </p>
 
-        {/* Descrizione */}
-        <p className="text-muted-foreground mb-6">
-          {description}
-        </p>
-
-        {/* Lista features */}
-        <div className="flex-grow">
-          <ul className="space-y-2">
+          <ul className="space-y-4 text-base">
             {features.map((feature, index) => (
-              <li key={index} className="flex items-start space-x-2 text-sm">
-                <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0" />
-                <span className="text-muted-foreground">{feature}</span>
+              <li key={index} className="flex items-start gap-4">
+                <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0 mt-2" />
+                <span className="text-foreground/90">{feature}</span>
               </li>
             ))}
           </ul>
-        </div>
 
-        {/* CTA Button */}
-        {ctaText && onCtaClick && (
-          <div className="mt-6 pt-4 border-t">
-            <Button
-              onClick={onCtaClick}
-              variant={highlighted ? "default" : "outline"}
-              className={`w-full ${
-                highlighted 
-                  ? 'brand-primary hover:opacity-90' 
-                  : 'border-primary text-primary hover:bg-primary hover:text-primary-foreground'
-              }`}
-            >
-              {ctaText}
-            </Button>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+          {ctaText && onCtaClick && (
+            <div className="mt-8 pt-6 border-t border-white/10">
+              <Button
+                onClick={onCtaClick}
+                size="lg"
+                className={clsx(
+                  "w-full text-lg font-semibold py-6 rounded-xl transition-all duration-300",
+                  {
+                    'bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:scale-[1.02]': highlighted,
+                    'bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 text-primary hover:bg-primary hover:text-primary-foreground hover:border-primary hover:shadow-lg hover:shadow-primary/20': !highlighted
+                  }
+                )}
+              >
+                {ctaText}
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+    </motion.div>
   );
 }
+

@@ -34,7 +34,6 @@ export default function RestaurantSection({ onWhatsAppClick, onLocationClick }: 
       x: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut" as any
       }
     }
   };
@@ -46,7 +45,6 @@ export default function RestaurantSection({ onWhatsAppClick, onLocationClick }: 
       y: 0,
       transition: {
         duration: 0.8,
-        ease: "easeOut" as any
       }
     }
   };
@@ -141,7 +139,7 @@ export default function RestaurantSection({ onWhatsAppClick, onLocationClick }: 
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-            transition={{ duration: 0.8, delay: 1, ease: "easeOut" as any }}
+            transition={{ duration: 0.8, delay: 1, ease: "easeOut" }}
           >
             <CTASection
               title="Diventa Nostro Partner"
@@ -156,11 +154,6 @@ export default function RestaurantSection({ onWhatsAppClick, onLocationClick }: 
                 icon: MapPin,
                 onClick: onLocationClick
               }}
-              features={[
-                "Prezzi all'ingrosso dedicati",
-                "Consegne programmate e puntuali",
-                "Assistenza commerciale personalizzata"
-              ]}
             />
           </motion.div>
         </div>

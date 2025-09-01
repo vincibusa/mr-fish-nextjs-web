@@ -1,23 +1,8 @@
 "use client";
 
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 import HeroSection from "@/components/sections/HeroSection";
 import AboutSection from "@/components/sections/AboutSection";
 import ProductsSection from "@/components/sections/ProductsSection";
-import ServiceCard from "@/components/sections/ServiceCard";
-import CTASection from "@/components/sections/CTASection";
-import {
-  Truck,
-  MessageCircle,
-  CreditCard,
-  Store,
-  Users,
-  ChefHat,
-  Clock,
-  MapPin,
-  Phone
-} from "lucide-react";
 import ServicesSection from "@/components/sections/ServicesSection";
 import ContactSection from "@/components/sections/ContactSection";
 
