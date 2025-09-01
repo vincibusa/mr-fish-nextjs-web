@@ -163,8 +163,8 @@ export default function ServicesSection({ onWhatsAppClick }: ServicesSectionProp
             const cardClasses = clsx(
               "group relative flex flex-col overflow-hidden rounded-3xl shadow-lg cursor-pointer",
               {
-                "h-[350px] md:h-[500px] lg:col-span-2 lg:row-span-2": index === 0, // Featured card
-                "h-[350px] md:h-[400px] md:col-span-1": index !== 0
+                "h-[350px] md:h-[500px] lg:col-span-2": index === 0, // Featured card takes 2 columns
+                "h-[350px] md:h-[400px]": index !== 0 // Other cards take 1 column each
               }
             );
 
