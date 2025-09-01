@@ -1,19 +1,24 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { MapPin, Download } from "lucide-react";
-import { motion } from "framer-motion";
+import { MapPin, Download, ExternalLink } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import Image from "next/image";
+
+const STORE_ADDRESS = "Corso+Tukory+9-11,+Palermo";
+const GOOGLE_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${STORE_ADDRESS}`;
+const FLYER_PDF_URL = "/volantino-mr-fish.pdf";
+const HERO_BG_IMAGE = "https://images.unsplash.com/photo-1607083206968-13611e3d76db?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80";
 
 export default function HeroSection() {
+  const shouldReduceMotion = useReducedMotion();
+  
   const handleLocationClick = () => {
-    window.open(
-      "https://www.google.com/maps/search/?api=1&query=Corso+Tukory+9-11,+Palermo",
-      "_blank"
-    );
+    window.open(GOOGLE_MAPS_URL, "_blank", "noopener,noreferrer");
   };
 
   const handleDownloadFlyer = () => {
-    window.open("/volantino-mr-fish.pdf", "_blank");
+    window.open(FLYER_PDF_URL, "_blank", "noopener,noreferrer");
   };
 
   const containerVariants = {
@@ -21,18 +26,19 @@ export default function HeroSection() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.3,
+        staggerChildren: shouldReduceMotion ? 0 : 0.3,
+        duration: shouldReduceMotion ? 0 : 0.6,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.8,
+        duration: shouldReduceMotion ? 0 : 0.8,
       },
     },
   };
@@ -41,11 +47,21 @@ export default function HeroSection() {
     <section 
       id="home" 
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      role="banner"
+      aria-label="Sezione principale - Mister Fish"
     >
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url('/store-background.jpg')` }}
-      />
+      {/* Background Image with Next.js optimization */}
+      <div className="absolute inset-0">
+        <Image
+          src={HERO_BG_IMAGE}
+          alt="Mercato del pesce con prodotti freschi e surgelati"
+          fill
+          className="object-cover"
+          priority
+          quality={85}
+          sizes="100vw"
+        />
+      </div>
       <div className="absolute inset-0 bg-black/50" />
       
       {/* Content Container */}
@@ -77,25 +93,29 @@ export default function HeroSection() {
           {/* CTA Buttons */}
           <motion.div 
             variants={itemVariants}
-            className="flex flex-col items-center justify-center gap-4 pt-6 sm:flex-row sm:gap-6"
+            className="flex flex-col items-center justify-center gap-6 pt-8 sm:flex-row"
           >
             <Button 
               size="lg" 
               onClick={handleLocationClick}
-              className="h-14 w-full rounded-full bg-primary px-8 text-lg font-semibold text-primary-foreground shadow-lg transition-transform duration-300 hover:scale-105 sm:w-auto"
+              aria-label="Visualizza la posizione del negozio su Google Maps (si apre in una nuova finestra)"
+              className="h-14 min-w-[280px] rounded-full bg-gradient-to-r from-primary to-primary/90 px-8 text-lg font-semibold text-primary-foreground shadow-lg shadow-primary/40 ring-2 ring-primary/20 transition-all duration-300 hover:from-primary/90 hover:to-primary hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-black/50 active:scale-95 sm:min-w-[240px]"
             >
-              <MapPin className="mr-3 h-6 w-6" />
+              <MapPin className="mr-3 h-5 w-5" />
               Vieni a trovarci
+              <ExternalLink className="ml-2 h-4 w-4 opacity-70" />
             </Button>
             
             <Button 
               size="lg" 
               variant="outline"
               onClick={handleDownloadFlyer}
-              className="h-14 w-full rounded-full border-2 border-white/80 bg-white/10 px-8 text-lg font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-white hover:text-foreground sm:w-auto"
+              aria-label="Scarica il volantino del negozio in PDF (si apre in una nuova finestra)"
+              className="h-14 min-w-[280px] rounded-full border-2 border-white bg-white/15 px-8 text-lg font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white hover:text-gray-900 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/50 active:scale-95 sm:min-w-[240px]"
             >
-              <Download className="mr-3 h-6 w-6" />
+              <Download className="mr-3 h-5 w-5" />
               Scarica il Volantino
+              <ExternalLink className="ml-2 h-4 w-4 opacity-70" />
             </Button>
           </motion.div>
         </motion.div>
