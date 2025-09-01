@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { MapPin, AlertCircle, RefreshCw } from "lucide-react";
@@ -29,7 +29,7 @@ export default function Map({ center, zoom, markerText, className = "", onLocati
   const [hasError, setHasError] = useState(false);
   const [isRetrying, setIsRetrying] = useState(false);
 
-  const initializeMap = async () => {
+  const initializeMap = useCallback(async () => {
     if (!mapRef.current || mapInstanceRef.current) return;
 
     try {
@@ -112,12 +112,13 @@ export default function Map({ center, zoom, markerText, className = "", onLocati
       // Disable drag on mobile to prevent conflicts
       if (window.innerWidth < 768) {
         map.dragging.disable();
+        // @ts-expect-error - tap property exists but not in TypeScript definitions
         map.tap?.disable();
       }
 
       // Set global function for popup button
       if (onLocationClick) {
-        (window as any).handleMapLocationClick = onLocationClick;
+        (window as Window & { handleMapLocationClick?: () => void }).handleMapLocationClick = onLocationClick;
       }
 
     } catch (error) {
@@ -126,7 +127,7 @@ export default function Map({ center, zoom, markerText, className = "", onLocati
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [center, zoom, markerText, onLocationClick]);
 
   const retryMapLoad = async () => {
     setIsRetrying(true);
@@ -146,11 +147,12 @@ export default function Map({ center, zoom, markerText, className = "", onLocati
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
       }
-      if ((window as any).handleMapLocationClick) {
-        delete (window as any).handleMapLocationClick;
+      const windowWithHandler = window as Window & { handleMapLocationClick?: () => void };
+      if (windowWithHandler.handleMapLocationClick) {
+        delete windowWithHandler.handleMapLocationClick;
       }
     };
-  }, [center, zoom, markerText]);
+  }, [center, zoom, markerText, initializeMap]);
 
   if (hasError) {
     return (
